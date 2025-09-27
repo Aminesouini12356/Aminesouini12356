@@ -1,7 +1,7 @@
-name: Generate GitHub Snake
+name: GitHub Snake
 on:
   schedule:
-    - cron: "0 */12 * * *"  # runs every 12 hours
+    - cron: "0 */12 * * *"
   workflow_dispatch:
 
 permissions:
@@ -11,20 +11,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Generate Snake animation
-        uses: Platane/snk@v1
+      - name: Run classic snake
+        uses: Platane/snk@v0.7.0
         with:
           github_user_name: ${{ github.repository_owner }}
-          svg_out_path: "./dist/snake.svg"
-          gif_out_path: "./dist/snake.gif" # optional
+          svg_out_path: "./snake.svg"
 
-      - name: Commit & Push Snake
+      - name: Commit & Push
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add -A
-          git commit -m "generated snake" || echo "no changes"
+          git commit -m "generate snake" || echo "no changes to commit"
           git push || echo "push failed"
