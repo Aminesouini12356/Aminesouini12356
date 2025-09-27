@@ -4,18 +4,18 @@ Welcome to my GitHub profile! 🚀
 
 ---
 
-### 🖼️ 3D Contribution Graph
+### Contribution Graph
 ![3D Profile](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/main/profile-3d-contrib/profile-night-rainbow.svg)
 
 ---
 
-### 🐍 GitHub Snake Animation
+
 ![GitHub Snake Light](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/main/dist/snake.svg#gh-light-mode-only)
 ![GitHub Snake Dark](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/main/dist/snake-dark.svg#gh-dark-mode-only)
 
 ---
 
-### 📊 GitHub Stats
+### 📊 Stats
 ![Amine's GitHub stats](https://github-readme-stats.vercel.app/api?username=Aminesouini12356&show_icons=true&theme=radical)
 
 ![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Aminesouini12356&layout=compact)
