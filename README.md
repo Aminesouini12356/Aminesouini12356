@@ -1,2 +1,3 @@
-# Aminesouini123456
-![3D Profile](./profile-3d-contrib/profile-green.svg)
+
+[![3D Profile](./profile-3d-contrib/profile-green.svg)](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/main/profile-3d-contrib/profile-green.svg
+)
