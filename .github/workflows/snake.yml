@@ -17,7 +17,9 @@ jobs:
       - name: Generate Snake animation
         uses: Platane/snk@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_user_name: ${{ github.repository_owner }}
+          svg_out_path: "./dist/snake.svg"
+          gif_out_path: "./dist/snake.gif" # optional
 
       - name: Commit & Push Snake
         run: |
