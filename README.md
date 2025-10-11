@@ -1,6 +1,6 @@
 # 👋 Hi, I’m Amine
 
-Welcome to my GitHub profile! 🚀
+Welcome to my GitHub profile!
 
 ---
 
@@ -11,7 +11,6 @@ Welcome to my GitHub profile! 🚀
 
 
 ![GitHub Snake Light](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/main/dist/snake.svg#gh-light-mode-only)
-![GitHub Snake Dark](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/main/dist/snake-dark.svg#gh-dark-mode-only)
 
 ---
 
