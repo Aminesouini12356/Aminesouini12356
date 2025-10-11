@@ -17,8 +17,6 @@ Welcome to my GitHub profile!
 ### 📊 Stats
 ![Amine's GitHub stats](https://github-readme-stats.vercel.app/api?username=Aminesouini12356&show_icons=true&theme=radical)
 
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=Aminesouini12356&layout=compact)
-
 ---
 
 ### 🏆 Trophies
