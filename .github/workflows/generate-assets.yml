@@ -2,7 +2,7 @@ name: Generate Profile Assets (snake + 3D)
 
 on:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * *"   # daily at midnight UTC
   workflow_dispatch:
 
 permissions:
@@ -12,12 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # -- Generate Snake Animation --
+      # Generate Snake Animation
       - name: Generate Snake
         uses: Platane/snk@v3
         with:
@@ -28,14 +29,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # -- Generate 3D graph --
+      # Generate 3D contribution graph
       - name: Generate 3D contribution
         uses: yoshi389111/github-profile-3d-contrib@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
 
-      # -- Push generated assets to output branch --
+      # Commit & Push generated assets to 'output' branch
       - name: Commit & Push outputs
         run: |
           set -e
@@ -43,7 +44,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Switch to output branch, create if not exists
+          # Switch to output branch if it exists, otherwise create orphan
           if git rev-parse --verify output; then
             git checkout output
           else
@@ -51,16 +52,22 @@ jobs:
             git rm -rf .
           fi
 
-          # Clear old generated files
+          # Remove old generated assets
           rm -rf dist profile-3d-contrib
 
-          # Copy newly generated files
-          cp -r dist dist
-          cp -r profile-3d-contrib profile-3d-contrib || true
+          # Ensure folders exist before committing
+          mkdir -p dist profile-3d-contrib
 
-          git add dist profile-3d-contrib
+          # Copy generated files if they exist
+          [ -f dist/snake.svg ] && cp dist/snake.svg dist/
+          [ -f dist/snake-dark.svg ] && cp dist/snake-dark.svg dist/
+          [ -f profile-3d-contrib/profile-night-rainbow.svg ] && cp profile-3d-contrib/profile-night-rainbow.svg profile-3d-contrib/
 
-          if git diff --staged --quiet; then
+          # Add only existing files
+          git add dist profile-3d-contrib || true
+
+          # Exit if nothing changed
+          if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
