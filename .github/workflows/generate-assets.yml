@@ -2,7 +2,7 @@ name: Generate Profile Assets (snake + 3D)
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # daily at midnight UTC (adjust as you like)
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -12,13 +12,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository (full history)
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # -- Generate Snake --
-      - name: Generate Snake Animation
+      # -- Generate Snake Animation --
+      - name: Generate Snake
         uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
@@ -28,48 +28,42 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # -- Generate 3D contribution graph --
-      - name: Generate 3D contribution graph
+      # -- Generate 3D graph --
+      - name: Generate 3D contribution
         uses: yoshi389111/github-profile-3d-contrib@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
 
-      # -- Commit & push outputs to 'output' branch (isolated) --
-      - name: Commit & Push outputs to output branch
+      # -- Push generated assets to output branch --
+      - name: Commit & Push outputs
         run: |
-          # configure bot author (not associated with your personal account)
+          set -e
+
           git config user.name "github-actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Create orphan branch 'output' with no parents (clean branch)
-          git checkout --orphan output
-
-          # Remove all files from index in the orphan branch
-          git rm -rf .
-
-          # Move generated assets to repo root if needed (adjust paths)
-          # (Assumes snake output is dist/* and 3D output is profile-3d-contrib/*)
-          if [ -d "dist" ]; then
-            mkdir -p dist
-            # dist already present, keep it
-            true
-          fi
-          if [ -d "profile-3d-contrib" ]; then
-            mkdir -p profile-3d-contrib
-            # keep it
-            true
+          # Switch to output branch, create if not exists
+          if git rev-parse --verify output; then
+            git checkout output
+          else
+            git checkout --orphan output
+            git rm -rf .
           fi
 
-          # Add only the generated asset directories to the commit
-          git add dist profile-3d-contrib || true
+          # Clear old generated files
+          rm -rf dist profile-3d-contrib
 
-          # If there are no generated files, exit gracefully
+          # Copy newly generated files
+          cp -r dist dist
+          cp -r profile-3d-contrib profile-3d-contrib || true
+
+          git add dist profile-3d-contrib
+
           if git diff --staged --quiet; then
-            echo "No generated assets to commit"
+            echo "No changes to commit"
             exit 0
           fi
 
           git commit -m "Update generated assets (snake + 3D)"
-          # Force push the 'output' branch so it always reflects latest generated assets
-          git push -f origin output
+          git push -u origin output --force
