@@ -5,12 +5,12 @@ Welcome to my GitHub profile!
 ---
 
 ### Contribution Graph
-![3D Profile](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/refs/heads/output/dist/snake.svg)
+![snake](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/refs/heads/output/dist/snake.svg)
 
 ---
 
 
-(https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/refs/heads/output/profile-3d-contrib/profile-gitblock.svg))
+![3D Profile](https://raw.githubusercontent.com/Aminesouini12356/Aminesouini12356/refs/heads/output/profile-3d-contrib/profile-gitblock.svg))
 
 ---
 
