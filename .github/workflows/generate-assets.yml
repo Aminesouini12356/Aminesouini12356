@@ -2,7 +2,7 @@ name: Generate Profile Assets (snake + 3D)
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # daily at midnight UTC
+    - cron: "0 0 * * *"   # run daily at midnight UTC
   workflow_dispatch:
 
 permissions:
@@ -44,33 +44,38 @@ jobs:
           git config user.name "github-actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Switch to output branch if it exists, otherwise create orphan
-          if git rev-parse --verify output; then
+          # Create or switch to 'output' branch safely
+          if git ls-remote --exit-code origin output >/dev/null 2>&1; then
+            git fetch origin output
             git checkout output
           else
             git checkout --orphan output
             git rm -rf .
           fi
 
-          # Remove old generated assets
-          rm -rf dist profile-3d-contrib
-
-          # Ensure folders exist before committing
+          # Copy generated files from main workspace
           mkdir -p dist profile-3d-contrib
 
-          # Copy generated files if they exist
-          [ -f dist/snake.svg ] && cp dist/snake.svg dist/
-          [ -f dist/snake-dark.svg ] && cp dist/snake-dark.svg dist/
-          [ -f profile-3d-contrib/profile-night-rainbow.svg ] && cp profile-3d-contrib/profile-night-rainbow.svg profile-3d-contrib/
+          if [ -f dist/snake.svg ]; then
+            echo "✅ Snake generated"
+          else
+            echo "⚠️ Snake file not found!"
+          fi
 
-          # Add only existing files
+          if [ -f profile-3d-contrib/profile-night-rainbow.svg ]; then
+            echo "✅ 3D graph generated"
+          else
+            echo "⚠️ 3D graph file not found!"
+          fi
+
+          # Add only if files exist
           git add dist profile-3d-contrib || true
 
-          # Exit if nothing changed
+          # Commit and push changes if there are any
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
 
           git commit -m "Update generated assets (snake + 3D)"
-          git push -u origin output --force
+          git push -f origin output
