@@ -1,6 +1,8 @@
-name: Debug Snake + 3D
+name: Generate Profile Assets (snake + 3D)
 
 on:
+  schedule:
+    - cron: "0 0 * * *"   # daily at midnight UTC
   workflow_dispatch:
 
 permissions:
@@ -9,12 +11,15 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
+      # Generate Snake Animation
       - name: Generate Snake
         uses: Platane/snk@v3
         with:
@@ -25,17 +30,47 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate 3D Contribution
+      # Generate 3D contribution graph
+      - name: Generate 3D contribution
         uses: yoshi389111/github-profile-3d-contrib@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
 
-      # 🔍 Debug step: list entire workspace
-      - name: Debug - Show workspace contents
+      # ✅ Debug: show generated files (optional but recommended)
+      - name: Debug workspace content
         run: |
-          echo "========= WORKSPACE ROOT ========"
-          pwd
-          ls -R .
-          echo "========= HOME DIR (if any) ========"
-          ls -R ~ || true
+          echo "---- Workspace content after generation ----"
+          ls -R
+          echo "-------------------------------------------"
+
+      # ✅ Commit & Push outputs to 'output' branch
+      - name: Commit & Push outputs
+        run: |
+          set -e
+
+          git config user.name "github-actions"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Fetch branches and switch/create 'output'
+          git fetch origin
+          if git show-ref --verify --quiet refs/heads/output; then
+            git checkout output
+          else
+            git checkout --orphan output
+          fi
+
+          # Copy generated assets from main branch if they exist
+          git checkout main -- dist profile-3d-contrib || true
+
+          # Ensure folders exist
+          mkdir -p dist profile-3d-contrib
+
+          # Force add everything (even updates)
+          git add -A
+
+          # Commit if there are changes
+          git commit -m "🔄 Auto-update snake and 3D contribution" || echo "No changes to commit"
+
+          # Force push updates to output branch
+          git push origin output --force
