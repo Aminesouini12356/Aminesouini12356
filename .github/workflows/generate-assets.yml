@@ -2,7 +2,7 @@ name: Generate Profile Assets (snake + 3D)
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # run daily at midnight UTC
+    - cron: "0 0 * * *"   # runs every day at midnight UTC
   workflow_dispatch:
 
 permissions:
@@ -12,13 +12,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # Generate Snake Animation
+      # 🐍 Generate Snake Animation
       - name: Generate Snake
         uses: Platane/snk@v3
         with:
@@ -29,14 +28,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Generate 3D contribution graph
-      - name: Generate 3D contribution
+      # 🧊 Generate 3D Contribution Graph
+      - name: Generate 3D Contribution
         uses: yoshi389111/github-profile-3d-contrib@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
 
-      # Commit & Push generated assets to 'output' branch
+      # 🪣 Debug: list generated files before committing
+      - name: Show generated files
+        run: |
+          echo "=== ROOT DIRECTORY ==="
+          ls -R || true
+          echo "=== DIST FOLDER ==="
+          ls -R dist || true
+          echo "=== 3D FOLDER ==="
+          ls -R profile-3d-contrib || true
+
+      # 💾 Commit & Push generated assets to 'output' branch
       - name: Commit & Push outputs
         run: |
           set -e
@@ -44,7 +53,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Create or switch to 'output' branch safely
+          # Switch or create 'output' branch
           if git ls-remote --exit-code origin output >/dev/null 2>&1; then
             git fetch origin output
             git checkout output
@@ -53,27 +62,25 @@ jobs:
             git rm -rf .
           fi
 
-          # Copy generated files from main workspace
+          # Copy generated assets from workspace
           mkdir -p dist profile-3d-contrib
 
-          if [ -f dist/snake.svg ]; then
-            echo "✅ Snake generated"
-          else
-            echo "⚠️ Snake file not found!"
+          # Move files only if they exist
+          if [ -f ./dist/snake.svg ]; then
+            cp ./dist/snake.svg ./dist/
+          fi
+          if [ -f ./dist/snake-dark.svg ]; then
+            cp ./dist/snake-dark.svg ./dist/
+          fi
+          if [ -f ./profile-3d-contrib/profile-gitblock.svg ]; then
+            cp ./profile-3d-contrib/profile-gitblock.svg ./profile-3d-contrib/
           fi
 
-          if [ -f profile-3d-contrib/profile-night-rainbow.svg ]; then
-            echo "✅ 3D graph generated"
-          else
-            echo "⚠️ 3D graph file not found!"
-          fi
-
-          # Add only if files exist
+          # Add and commit
           git add dist profile-3d-contrib || true
 
-          # Commit and push changes if there are any
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "⚠️ No new assets to commit"
             exit 0
           fi
 
