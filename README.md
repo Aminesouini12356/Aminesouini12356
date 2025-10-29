@@ -10,7 +10,6 @@ I enjoy exploring new technologies, solving real-world problems, and continuousl
 
 - 💡 I love turning ideas into simple, impactful web projects.  
 - 🎯 Focused on growth, creativity, and collaboration.  
-- ⚡ Fun fact: I enjoy both **coding and creative design** — the perfect mix of logic and art.  
 - 💼 [Connect with me on LinkedIn](https://www.linkedin.com/in/mohamed-amine-souini-a74816314/)
 
 ---
