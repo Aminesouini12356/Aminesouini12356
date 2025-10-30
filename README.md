@@ -6,7 +6,7 @@ I enjoy exploring new technologies, solving real-world problems, and continuousl
 
 ---
 
-## 🌍 About Me
+##  About Me
 
 - 💡 I love turning ideas into simple, impactful web projects.  
 - 🎯 Focused on growth, creativity, and collaboration.  
@@ -33,4 +33,4 @@ I enjoy exploring new technologies, solving real-world problems, and continuousl
 
 ---
 
-> “Keep learning, keep building — one idea at a time.” 🚀
+> “Keep learning, keep building — one idea at a time.” 
